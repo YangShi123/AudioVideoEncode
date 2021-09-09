@@ -13,6 +13,8 @@
 		CD00328A26E8A37400E595F1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD00328826E8A37400E595F1 /* Main.storyboard */; };
 		CD00328C26E8A37500E595F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD00328B26E8A37500E595F1 /* Assets.xcassets */; };
 		CD00328F26E8A37500E595F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD00328D26E8A37500E595F1 /* LaunchScreen.storyboard */; };
+		CD00329B26E8A60200E595F1 /* SYCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00329A26E8A60200E595F1 /* SYCapture.swift */; };
+		CDAB652F26E9AF0700116150 /* SYVideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAB652E26E9AF0700116150 /* SYVideoEncoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		CD00328B26E8A37500E595F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD00328E26E8A37500E595F1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD00329026E8A37500E595F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD00329A26E8A60200E595F1 /* SYCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYCapture.swift; sourceTree = "<group>"; };
+		CDAB652E26E9AF0700116150 /* SYVideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYVideoEncoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,8 @@
 			children = (
 				CD00328226E8A37400E595F1 /* AppDelegate.swift */,
 				CD00328426E8A37400E595F1 /* SceneDelegate.swift */,
+				CD00329626E8A56C00E595F1 /* Capture */,
+				CD00329726E8A57800E595F1 /* AVCoder */,
 				CD00328626E8A37400E595F1 /* ViewController.swift */,
 				CD00328826E8A37400E595F1 /* Main.storyboard */,
 				CD00328B26E8A37500E595F1 /* Assets.xcassets */,
@@ -65,6 +71,38 @@
 				CD00329026E8A37500E595F1 /* Info.plist */,
 			);
 			path = AudioVideoEncode;
+			sourceTree = "<group>";
+		};
+		CD00329626E8A56C00E595F1 /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+				CD00329A26E8A60200E595F1 /* SYCapture.swift */,
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
+		CD00329726E8A57800E595F1 /* AVCoder */ = {
+			isa = PBXGroup;
+			children = (
+				CD00329926E8A5B700E595F1 /* AudioEncoder */,
+				CD00329826E8A5AA00E595F1 /* VideoEncoder */,
+			);
+			path = AVCoder;
+			sourceTree = "<group>";
+		};
+		CD00329826E8A5AA00E595F1 /* VideoEncoder */ = {
+			isa = PBXGroup;
+			children = (
+				CDAB652E26E9AF0700116150 /* SYVideoEncoder.swift */,
+			);
+			path = VideoEncoder;
+			sourceTree = "<group>";
+		};
+		CD00329926E8A5B700E595F1 /* AudioEncoder */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AudioEncoder;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,7 +176,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD00328726E8A37400E595F1 /* ViewController.swift in Sources */,
+				CDAB652F26E9AF0700116150 /* SYVideoEncoder.swift in Sources */,
 				CD00328326E8A37400E595F1 /* AppDelegate.swift in Sources */,
+				CD00329B26E8A60200E595F1 /* SYCapture.swift in Sources */,
 				CD00328526E8A37400E595F1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +327,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 55MX29GV4X;
 				INFOPLIST_FILE = AudioVideoEncode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -295,7 +337,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SY.AudioVideoEncode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -305,7 +347,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 55MX29GV4X;
 				INFOPLIST_FILE = AudioVideoEncode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -313,7 +357,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SY.AudioVideoEncode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
