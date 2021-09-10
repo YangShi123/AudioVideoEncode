@@ -5,18 +5,11 @@
 
 import VideoToolbox
 
-class SYVideoConfig {
-    var width: Int!
-    var height: Int!
-    var bitRate: Int!
-    var fps: Int!
-}
-
 protocol SYVideoEncoderDelegate {
     /// h264数据编码完成回调
-    func videoEncodeCallBack(h264Data: NSData) -> Void
+    func videoEncodeCallback(h264Data: NSData) -> Void
     /// sps pps数据编码完成回调
-    func videoEncodeCallBack(sps: NSData, pps: NSData) -> Void
+    func videoEncodeCallback(sps: NSData, pps: NSData) -> Void
 }
 
 class SYVideoEncoder {
@@ -33,12 +26,12 @@ class SYVideoEncoder {
     /// 是否已经获取过sps pps
     private var hasSpsPps = false
     /// 编码异步队列
-    lazy var encodeQueue: dispatch_queue_global_t = {
+    lazy private var encodeQueue: dispatch_queue_global_t = {
         let queue = dispatch_queue_global_t.init(label: "encode_queue")
         return queue
     }()
     /// 编码完成回调异步队列
-    lazy var callbackQueue: dispatch_queue_global_t = {
+    lazy private var callbackQueue: dispatch_queue_global_t = {
         let queue = dispatch_queue_global_t.init(label: "callback_queue")
         return queue
     }()
@@ -47,15 +40,32 @@ class SYVideoEncoder {
         self.config = config
         /// 注意：compressionOutputCallback初始化要放在setupSession之前
         didCompressH264()
-        setupSession()
+        initEncoder()
+    }
+    
+    deinit {
+        if encodeSession != nil {
+            VTCompressionSessionCompleteFrames(encodeSession, untilPresentationTimeStamp: .invalid)
+            VTCompressionSessionInvalidate(encodeSession)
+            encodeSession = nil
+        }
     }
 }
 // MARK: -初始化编码器
 extension SYVideoEncoder {
     /// 配置编码参数
-    private func setupSession() {
+    private func initEncoder() {
         /// 创建编码会话
-        var status = VTCompressionSessionCreate(allocator: nil, width: Int32(config.width), height: Int32(config.height), codecType: kCMVideoCodecType_H264, encoderSpecification: nil, imageBufferAttributes: nil, compressedDataAllocator: nil, outputCallback: compressionOutputCallback, refcon: unsafeBitCast(self, to: UnsafeMutablePointer.self), compressionSessionOut: &encodeSession)
+        var status = VTCompressionSessionCreate(allocator: nil,
+                                                width: Int32(config.width),
+                                                height: Int32(config.height),
+                                                codecType: kCMVideoCodecType_H264,
+                                                encoderSpecification: nil,
+                                                imageBufferAttributes: nil,
+                                                compressedDataAllocator: nil,
+                                                outputCallback: compressionOutputCallback,
+                                                refcon: unsafeBitCast(self, to: UnsafeMutablePointer.self),
+                                                compressionSessionOut: &encodeSession)
         if status != noErr {
             fatalError("VTCompressionSessionCreate field, statu=\(status)")
         }
@@ -112,7 +122,13 @@ extension SYVideoEncoder {
             /// 3.持续时间
             let duration = CMTime.invalid
             /// 4.编码
-            let status = VTCompressionSessionEncodeFrame(encodeSession, imageBuffer: imageBuffer!, presentationTimeStamp: timeStamp, duration: duration, frameProperties: nil, sourceFrameRefcon: nil, infoFlagsOut: nil)
+            let status = VTCompressionSessionEncodeFrame(encodeSession,
+                                                         imageBuffer: imageBuffer!,
+                                                         presentationTimeStamp: timeStamp,
+                                                         duration: duration,
+                                                         frameProperties: nil,
+                                                         sourceFrameRefcon: nil,
+                                                         infoFlagsOut: nil)
             if status != noErr {
                 fatalError("VTCompressionSessionEncodeFrame: failed: status=\(status)")
             }
@@ -123,7 +139,11 @@ extension SYVideoEncoder {
 extension SYVideoEncoder {
     /// 编码完成的回调
     private func didCompressH264() {
-        compressionOutputCallback = {(outputCallbackRefCon, sourceFrameRefCon, status, flag, sampleBuffer) in
+        compressionOutputCallback = {(outputCallbackRefCon,
+                                      sourceFrameRefCon,
+                                      status,
+                                      flag,
+                                      sampleBuffer) in
             if status != noErr {
                 fatalError("compressionOutputCallback: failed: status=\(status)")
             }
@@ -147,13 +167,23 @@ extension SYVideoEncoder {
                 var spsSize = 0
                 var spsCount = 0
                 var spsHeaderLength: Int32 = 0
-                let spsStatus = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(formatDesc!, parameterSetIndex: 0, parameterSetPointerOut: &spsData, parameterSetSizeOut: &spsSize, parameterSetCountOut: &spsCount, nalUnitHeaderLengthOut: &spsHeaderLength)
+                let spsStatus = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(formatDesc!,
+                                                                                   parameterSetIndex: 0,
+                                                                                   parameterSetPointerOut: &spsData,
+                                                                                   parameterSetSizeOut: &spsSize,
+                                                                                   parameterSetCountOut: &spsCount,
+                                                                                   nalUnitHeaderLengthOut: &spsHeaderLength)
                 /// pps
                 var ppsData: UnsafePointer<UInt8>? = UnsafePointer(bitPattern: 0)
                 var ppsSize = 0
                 var ppsCount = 0
                 var ppsHeaderLength: Int32 = 0
-                let ppsStatus = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(formatDesc!, parameterSetIndex: 1, parameterSetPointerOut: &ppsData, parameterSetSizeOut: &ppsSize, parameterSetCountOut: &ppsCount, nalUnitHeaderLengthOut: &ppsHeaderLength)
+                let ppsStatus = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(formatDesc!,
+                                                                                   parameterSetIndex: 1,
+                                                                                   parameterSetPointerOut: &ppsData,
+                                                                                   parameterSetSizeOut: &ppsSize,
+                                                                                   parameterSetCountOut: &ppsCount,
+                                                                                   nalUnitHeaderLengthOut: &ppsHeaderLength)
                 /// 获取sps pps 成功
                 if spsStatus == noErr && ppsStatus == noErr {
                     encoder.hasSpsPps = true
@@ -165,7 +195,7 @@ extension SYVideoEncoder {
                     pps?.append(bytes, length: bytes.count)
                     pps?.append(ppsData!, length: ppsSize)
                     encoder.callbackQueue.async {
-                        encoder.delegate?.videoEncodeCallBack(sps: sps!, pps: pps!)
+                        encoder.delegate?.videoEncodeCallback(sps: sps!, pps: pps!)
                     }
                 } else {
                     debugPrint("compressionOutputCallback: get sps/pps failed spsStatus=\(spsStatus) ppsStatus=\(ppsStatus)")
@@ -177,7 +207,11 @@ extension SYVideoEncoder {
             var lengthAtOffset = 0
             var totalLength = 0
             var dataPointer: UnsafeMutablePointer<Int8>? = nil
-            let status = CMBlockBufferGetDataPointer(blockBuffer!, atOffset: 0, lengthAtOffsetOut: &lengthAtOffset, totalLengthOut: &totalLength, dataPointerOut: &dataPointer)
+            let status = CMBlockBufferGetDataPointer(blockBuffer!,
+                                                     atOffset: 0,
+                                                     lengthAtOffsetOut: &lengthAtOffset,
+                                                     totalLengthOut: &totalLength,
+                                                     dataPointerOut: &dataPointer)
             if status != noErr {
                 fatalError("compressionOutputCallback: get datapoint failed, statu=\(status)")
             }
@@ -190,13 +224,13 @@ extension SYVideoEncoder {
                 var naluDataLength: UInt32 = 0
                 memcpy(&naluDataLength, dataPointer! + UnsafeMutablePointer<Int8>.Stride(offset), headerLength)
                 /// 大端转系统端
-                naluDataLength = CFSwapInt32(naluDataLength)
+                naluDataLength = CFSwapInt32BigToHost(naluDataLength)
                 /// 获取编码好的视频数据
                 let data = NSMutableData(capacity: bytes.count + Int(naluDataLength))
                 data?.append(bytes, length: bytes.count)
                 data?.append(dataPointer! + UnsafeMutablePointer<Int8>.Stride(offset) + headerLength, length: Int(naluDataLength))
                 encoder.callbackQueue.async {
-                    encoder.delegate?.videoEncodeCallBack(h264Data: data!)
+                    encoder.delegate?.videoEncodeCallback(h264Data: data!)
                 }
                 /// 移动偏移量 读取下一个数据
                 offset += UInt32(headerLength) + naluDataLength
