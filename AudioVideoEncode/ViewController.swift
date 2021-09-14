@@ -16,13 +16,15 @@ class ViewController: UIViewController {
     
     var videoPlayLayer: AAPLEAGLLayer!
     
+    var audioEncoder: SYAudioEncoder!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         let size = CGSize(width: view.bounds.width / 2, height: view.bounds.height / 2)
         
-        capture = SYCapture.init(type: .video)
+        capture = SYCapture.init(type: .audio)
         capture.videoPreset = .hd1920x1080
         capture.preView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         capture.prepare(size: size)
@@ -44,7 +46,17 @@ class ViewController: UIViewController {
         videoPlayLayer = AAPLEAGLLayer.init(frame: CGRect(x: size.width, y: 0, width: size.width, height: size.height))
         view.layer.addSublayer(videoPlayLayer)
         
+        let audioConfig = SYAudioConfig.init()
+        audioEncoder = SYAudioEncoder.init(config: audioConfig)
+        audioEncoder.delegate = self
+    }
+    
+    @IBAction func recording(_ sender: UIButton) {
         capture.startCapture()
+    }
+    
+    @IBAction func play(_ sender: UIButton) {
+        capture.stopCapture()
     }
 }
 // MARK: -捕获音视频回调
@@ -53,9 +65,10 @@ extension ViewController: SYCaptureDelegate {
         if type == .video {
             videoEncoder.encodeVideo(sampleBuffer: sampleBuffer)
         } else if type == .audio {
-            
+            audioEncoder.encodeAudio(sampleBuffer: sampleBuffer)
         } else {
             videoEncoder.encodeVideo(sampleBuffer: sampleBuffer)
+            audioEncoder.encodeAudio(sampleBuffer: sampleBuffer)
         }
     }
 }
@@ -80,6 +93,13 @@ extension ViewController: SYVideoEncoderDelegate {
 extension ViewController: SYVideoDecoderDelegate {
     func videoDecodeCallback(imageBuffer: CVPixelBuffer) {
         videoPlayLayer.pixelBuffer = imageBuffer
+    }
+}
+
+// MARK: -AAC编码回调
+extension ViewController: SYAudioEncoderDelegate {
+    func audioEncodeCallback(aacData: NSData) {
+        debugPrint(aacData)
     }
 }
 

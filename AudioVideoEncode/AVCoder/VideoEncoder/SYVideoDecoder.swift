@@ -134,7 +134,7 @@ extension SYVideoDecoder {
             let size: UInt32 = UInt32(data.count)
             /// 前4个字节是NALU数据的开始码，也就是00 00 00 01，
             let naluSize = size - 4
-            /// 将NALU的开始码转为4字节大端NALU的长度信息
+            /// 将NALU长度转为4字节大端NALU的长度信息
             let length : [UInt8] = [
                 UInt8(truncatingIfNeeded: naluSize >> 24),
                 UInt8(truncatingIfNeeded: naluSize >> 16),

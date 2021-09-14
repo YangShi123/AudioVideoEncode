@@ -223,6 +223,7 @@ extension SYVideoEncoder {
                 /// NALU数据长度
                 var naluDataLength: UInt32 = 0
                 memcpy(&naluDataLength, dataPointer! + UnsafeMutablePointer<Int8>.Stride(offset), headerLength)
+                /// copy出来的前4个字节保存的是NALU数据的长度信息，它是大端数据（eg:1000），但是数据长度不是1000，而是0010，因此要大端转为系统端
                 /// 大端转系统端
                 naluDataLength = CFSwapInt32BigToHost(naluDataLength)
                 /// 获取编码好的视频数据

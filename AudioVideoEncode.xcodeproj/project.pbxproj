@@ -14,6 +14,8 @@
 		CD00328C26E8A37500E595F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD00328B26E8A37500E595F1 /* Assets.xcassets */; };
 		CD00328F26E8A37500E595F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD00328D26E8A37500E595F1 /* LaunchScreen.storyboard */; };
 		CD00329B26E8A60200E595F1 /* SYCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00329A26E8A60200E595F1 /* SYCapture.swift */; };
+		CD339F1726EEEECA00A67EDC /* SYAudioEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD339F1626EEEECA00A67EDC /* SYAudioEncoder.swift */; };
+		CD339F1926EEEEFF00A67EDC /* SYAudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD339F1826EEEEFF00A67EDC /* SYAudioConfig.swift */; };
 		CDA6B94C26EB44E300A7D91F /* AAPLEAGLLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA6B94A26EB44E300A7D91F /* AAPLEAGLLayer.m */; };
 		CDAB652F26E9AF0700116150 /* SYVideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAB652E26E9AF0700116150 /* SYVideoEncoder.swift */; };
 		CDAB653126EA097400116150 /* SYVideoDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAB653026EA097400116150 /* SYVideoDecoder.swift */; };
@@ -30,6 +32,8 @@
 		CD00328E26E8A37500E595F1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD00329026E8A37500E595F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD00329A26E8A60200E595F1 /* SYCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYCapture.swift; sourceTree = "<group>"; };
+		CD339F1626EEEECA00A67EDC /* SYAudioEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYAudioEncoder.swift; sourceTree = "<group>"; };
+		CD339F1826EEEEFF00A67EDC /* SYAudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYAudioConfig.swift; sourceTree = "<group>"; };
 		CDA6B94526EB44C800A7D91F /* AudioVideoEncode-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioVideoEncode-Bridging-Header.h"; sourceTree = "<group>"; };
 		CDA6B94A26EB44E300A7D91F /* AAPLEAGLLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLEAGLLayer.m; sourceTree = "<group>"; };
 		CDA6B94B26EB44E300A7D91F /* AAPLEAGLLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLEAGLLayer.h; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 		CD00329926E8A5B700E595F1 /* AudioEncoder */ = {
 			isa = PBXGroup;
 			children = (
+				CD339F1626EEEECA00A67EDC /* SYAudioEncoder.swift */,
+				CD339F1826EEEEFF00A67EDC /* SYAudioConfig.swift */,
 			);
 			path = AudioEncoder;
 			sourceTree = "<group>";
@@ -197,11 +203,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD339F1726EEEECA00A67EDC /* SYAudioEncoder.swift in Sources */,
 				CDAB653126EA097400116150 /* SYVideoDecoder.swift in Sources */,
 				CDAB653326EA09BA00116150 /* SYVideoConfig.swift in Sources */,
 				CD00328726E8A37400E595F1 /* ViewController.swift in Sources */,
 				CDAB652F26E9AF0700116150 /* SYVideoEncoder.swift in Sources */,
 				CD00328326E8A37400E595F1 /* AppDelegate.swift in Sources */,
+				CD339F1926EEEEFF00A67EDC /* SYAudioConfig.swift in Sources */,
 				CD00329B26E8A60200E595F1 /* SYCapture.swift in Sources */,
 				CDA6B94C26EB44E300A7D91F /* AAPLEAGLLayer.m in Sources */,
 				CD00328526E8A37400E595F1 /* SceneDelegate.swift in Sources */,
