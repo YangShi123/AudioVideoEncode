@@ -78,7 +78,7 @@
 				CD00328426E8A37400E595F1 /* SceneDelegate.swift */,
 				CDA6B94926EB44E300A7D91F /* VideoPlayer */,
 				CD00329626E8A56C00E595F1 /* Capture */,
-				CD00329726E8A57800E595F1 /* AVCoder */,
+				CD00329726E8A57800E595F1 /* Coder */,
 				CD00328626E8A37400E595F1 /* ViewController.swift */,
 				CD00328826E8A37400E595F1 /* Main.storyboard */,
 				CD00328B26E8A37500E595F1 /* Assets.xcassets */,
@@ -97,13 +97,13 @@
 			path = Capture;
 			sourceTree = "<group>";
 		};
-		CD00329726E8A57800E595F1 /* AVCoder */ = {
+		CD00329726E8A57800E595F1 /* Coder */ = {
 			isa = PBXGroup;
 			children = (
 				CD00329926E8A5B700E595F1 /* AudioEncoder */,
 				CD00329826E8A5AA00E595F1 /* VideoEncoder */,
 			);
-			path = AVCoder;
+			path = Coder;
 			sourceTree = "<group>";
 		};
 		CD00329826E8A5AA00E595F1 /* VideoEncoder */ = {
