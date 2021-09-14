@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     
     var audioEncoder: SYAudioEncoder!
     
+    var audioDecoder: SYAudioDecoder!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +50,9 @@ class ViewController: UIViewController {
         let audioConfig = SYAudioConfig.init()
         audioEncoder = SYAudioEncoder.init(config: audioConfig)
         audioEncoder.delegate = self
+        
+        audioDecoder = SYAudioDecoder.init(config: audioConfig)
+        audioDecoder.delegate = self
     }
     
     @IBAction func recording(_ sender: UIButton) {
@@ -99,7 +103,14 @@ extension ViewController: SYVideoDecoderDelegate {
 // MARK: -AAC编码回调
 extension ViewController: SYAudioEncoderDelegate {
     func audioEncodeCallback(aacData: NSData) {
-        debugPrint(aacData)
+        audioDecoder.decodeAudio(aacData: aacData)
+    }
+}
+
+// MARK: -AAC解码回调
+extension ViewController: SYAudioDecoderDelegate {
+    func audioDecodeCallback(pcmData: NSData) {
+        print(pcmData)
     }
 }
 

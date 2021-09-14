@@ -20,6 +20,7 @@
 		CDAB652F26E9AF0700116150 /* SYVideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAB652E26E9AF0700116150 /* SYVideoEncoder.swift */; };
 		CDAB653126EA097400116150 /* SYVideoDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAB653026EA097400116150 /* SYVideoDecoder.swift */; };
 		CDAB653326EA09BA00116150 /* SYVideoConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAB653226EA09BA00116150 /* SYVideoConfig.swift */; };
+		CDD9112126F0395B00492F98 /* SYAudioDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD9112026F0395B00492F98 /* SYAudioDecoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		CDAB652E26E9AF0700116150 /* SYVideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYVideoEncoder.swift; sourceTree = "<group>"; };
 		CDAB653026EA097400116150 /* SYVideoDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYVideoDecoder.swift; sourceTree = "<group>"; };
 		CDAB653226EA09BA00116150 /* SYVideoConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYVideoConfig.swift; sourceTree = "<group>"; };
+		CDD9112026F0395B00492F98 /* SYAudioDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYAudioDecoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				CD339F1626EEEECA00A67EDC /* SYAudioEncoder.swift */,
+				CDD9112026F0395B00492F98 /* SYAudioDecoder.swift */,
 				CD339F1826EEEEFF00A67EDC /* SYAudioConfig.swift */,
 			);
 			path = AudioEncoder;
@@ -210,6 +213,7 @@
 				CDAB652F26E9AF0700116150 /* SYVideoEncoder.swift in Sources */,
 				CD00328326E8A37400E595F1 /* AppDelegate.swift in Sources */,
 				CD339F1926EEEEFF00A67EDC /* SYAudioConfig.swift in Sources */,
+				CDD9112126F0395B00492F98 /* SYAudioDecoder.swift in Sources */,
 				CD00329B26E8A60200E595F1 /* SYCapture.swift in Sources */,
 				CDA6B94C26EB44E300A7D91F /* AAPLEAGLLayer.m in Sources */,
 				CD00328526E8A37400E595F1 /* SceneDelegate.swift in Sources */,

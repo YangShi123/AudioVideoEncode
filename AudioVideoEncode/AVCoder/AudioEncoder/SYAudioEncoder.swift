@@ -43,34 +43,32 @@ class SYAudioEncoder {
 // MARK: -初始化编码器
 extension SYAudioEncoder {
     private func initConverter(sampleBuffer: CMSampleBuffer) {
-        if audioConverter != nil {
-            return
-        }
+        if audioConverter != nil { return }
         let desc = CMSampleBufferGetFormatDescription(sampleBuffer)
         /// 获取输入参数
-        let inSourceFormat = CMAudioFormatDescriptionGetStreamBasicDescription(desc!)
+        let inDescriptionFormat = CMAudioFormatDescriptionGetStreamBasicDescription(desc!)
         /// 设置输出参数
-        var inDestinationFormat = AudioStreamBasicDescription.init()
-        inDestinationFormat.mSampleRate = Float64(config.sampleRate)    ///采样率
-        inDestinationFormat.mFormatID = kAudioFormatMPEG4AAC            ///输出格式
-        inDestinationFormat.mFormatFlags = 2                            ///如果设为0 代表无损编码
-        inDestinationFormat.mBytesPerPacket = 0                         ///自己确定每个packet 大小
-        inDestinationFormat.mBytesPerFrame = 0                          ///每一帧大小
-        inDestinationFormat.mFramesPerPacket = 1024                     ///每一个packet帧数 AAC-1024
-        inDestinationFormat.mChannelsPerFrame = config.channelCount     ///输出声道数
-        inDestinationFormat.mBitsPerChannel = 0                         ///数据帧中每个通道的采样位数
-        inDestinationFormat.mReserved = 0                               ///对其方式 0(8字节对齐)
+        var outDescriptionFormat = AudioStreamBasicDescription.init()
+        outDescriptionFormat.mSampleRate = Float64(config.sampleRate)    ///采样率
+        outDescriptionFormat.mFormatID = kAudioFormatMPEG4AAC            ///输出格式
+        outDescriptionFormat.mFormatFlags = 2                            ///如果设为0 代表无损编码
+        outDescriptionFormat.mBytesPerPacket = 0                         ///自己确定每个packet 大小
+        outDescriptionFormat.mBytesPerFrame = 0                          ///每一帧大小
+        outDescriptionFormat.mFramesPerPacket = 1024                     ///每一个packet帧数 AAC-1024
+        outDescriptionFormat.mChannelsPerFrame = config.channelCount     ///输出声道数
+        outDescriptionFormat.mBitsPerChannel = 0                         ///数据帧中每个通道的采样位数
+        outDescriptionFormat.mReserved = 0                               ///对其方式 0(8字节对齐)
         /// 填充输出相关信息
-        var inDestinationFormatSize: UInt32 = UInt32(MemoryLayout.size(ofValue: inDestinationFormat))
+        var outDestinationFormatSize: UInt32 = UInt32(MemoryLayout.size(ofValue: outDescriptionFormat))
         var status = AudioFormatGetProperty(kAudioFormatProperty_FormatInfo,
                                             0,
                                             nil,
-                                            &inDestinationFormatSize,
-                                            &inDestinationFormat)
+                                            &outDestinationFormatSize,
+                                            &outDescriptionFormat)
         debugPrint("AudioFormatGetProperty: FormatInfo result=\(status)")
         if status != noErr { return }
         /// 编码器的描述信息
-        var inClassDescriptions = getAudioClassDescription(with: inDestinationFormat.mFormatID, form: kAppleSoftwareAudioCodecManufacturer)!
+        var audioClassDescriptions = getAudioClassDescription(with: outDescriptionFormat.mFormatID, form: kAppleSoftwareAudioCodecManufacturer)!
         
         /** 创建converter
          参数1：输入音频格式描述
@@ -79,10 +77,10 @@ extension SYAudioEncoder {
          参数4：class desc
          参数5：创建的解码器
          */
-        status = AudioConverterNewSpecific(inSourceFormat!,
-                                           &inDestinationFormat,
+        status = AudioConverterNewSpecific(inDescriptionFormat!,
+                                           &outDescriptionFormat,
                                            1,
-                                           &inClassDescriptions,
+                                           &audioClassDescriptions,
                                            &audioConverter)
         debugPrint("AudioConverterNewSpecific: result=\(status)")
         if status != noErr { return }
@@ -108,9 +106,7 @@ extension SYAudioEncoder {
         debugPrint("AudioConverterSetProperty: BitRate result=\(status)")
     }
     
-    /**
-     *  获取编解码器
-     *
+    /**获取编解码器
      *  @param type         编码格式
      *  @param manufacturer 软/硬编
      *
@@ -174,21 +170,22 @@ extension SYAudioEncoder {
             memset(pcmBuffer, 0, pcmBufferSize)
             var ioOutputDataPacketSize: UInt32 = 1
             /// 配置AudioBufferList 为输出预分配内存
-            var outOutputData: AudioBufferList = AudioBufferList.init()
-            outOutputData.mNumberBuffers = 1
-            outOutputData.mBuffers.mNumberChannels = config.channelCount
-            outOutputData.mBuffers.mDataByteSize = UInt32(pcmBufferSize)
-            outOutputData.mBuffers.mData = pcmBuffer
+            var outAudioBufferList: AudioBufferList = AudioBufferList.init()
+            outAudioBufferList.mNumberBuffers = 1
+            outAudioBufferList.mBuffers.mNumberChannels = config.channelCount
+            outAudioBufferList.mBuffers.mDataByteSize = UInt32(pcmBufferSize)
+            outAudioBufferList.mBuffers.mData = pcmBuffer
             ///配置填充函数，获取输出数据
             status = AudioConverterFillComplexBuffer(audioConverter,
                                                      audioConverterComplexInputDataProc,
                                                      unsafeBitCast(self, to: UnsafeMutablePointer.self),
                                                      &ioOutputDataPacketSize,
-                                                     &outOutputData, nil)
+                                                     &outAudioBufferList,
+                                                     nil)
             debugPrint("AudioConverterFillComplexBuffer: result=\(status)")
             if status != noErr { return }
             /// 获取到编码完成后的AAC数据
-            let aacData = NSData(bytes: outOutputData.mBuffers.mData, length: Int(outOutputData.mBuffers.mDataByteSize))
+            let aacData = NSData(bytes: outAudioBufferList.mBuffers.mData, length: Int(outAudioBufferList.mBuffers.mDataByteSize))
             callbackQueue.async {
                 delegate?.audioEncodeCallback(aacData: aacData)
             }
